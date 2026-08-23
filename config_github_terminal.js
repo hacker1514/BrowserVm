@@ -14,7 +14,7 @@ export const args = ["--login"];
 export const opts = {
 	// Environment variables
 	env: [
-		"HOME=/home/user",
+		"HOME=/home/Hacker",
 		"TERM=xterm-256color",
 		"USER=Hacker",
 		"LOGNAME=Hacker",
@@ -25,7 +25,7 @@ export const opts = {
 		"PS1=\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\] "
 	],
 	// Current working directory
-	cwd: "/home/user",
+	cwd: "/home/Hacker",
 	// User id
 	uid: 1000,
 	// Group id
