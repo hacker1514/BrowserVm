@@ -8,7 +8,7 @@ RUN echo "deb [trusted=yes] http://archive.debian.org/debian buster main contrib
 	>> /etc/apt/sources.list
 
 RUN apt-get clean && apt-get update && apt-get -y upgrade
-RUN apt-get -y install apt-utils gcc \
+RUN apt-get -y install apt-utils gcc g++ build-essential \
 	python3 vim unzip ruby nodejs \
 	fakeroot dbus base whiptail hexedit \
 	patch wamerican ucf manpages \
@@ -22,5 +22,5 @@ WORKDIR /home/user/
 # We set env, as this gets extracted by Webvm. This is optional.
 ENV HOME="/home/user" TERM="xterm-256color" USER="Hacker" LOGNAME="Hacker" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
 RUN echo 'root:1234' | chpasswd
-RUN echo 'export PROMPT_COMMAND="export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\033[0m\\\"\" DEBUG"' >> /etc/bash.bashrc
+RUN echo 'export PS1="\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\] "' >> /etc/bash.bashrc
 CMD [ "/bin/bash" ]
