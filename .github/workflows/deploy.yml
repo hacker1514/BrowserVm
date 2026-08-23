@@ -181,8 +181,6 @@ jobs:
           sed -i 's#IMAGE_URL#"${{ env.IMAGE_NAME }}"#g' config_github_terminal.js
           sed -i 's#CMD#${{ env.CMD }}#g' config_github_terminal.js
           sed -i 's#ARGS#${{ env.ARGS }}#g' config_github_terminal.js
-          sed -i 's#ENV#${{ env.ENV }}#g' config_github_terminal.js
-          sed -i 's#CWD#${{ env.CWD }}#g' config_github_terminal.js
 
       - name: Build NPM package
         run: |
