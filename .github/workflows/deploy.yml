@@ -192,7 +192,7 @@ jobs:
       # Move required files for gh-pages deployment to the deployment directory $DEPLOY_DIR.
       - name: Copy build
         run: |
-          rm build/alpine.html
+          rm -f build/alpine.html
           sudo mv build/* $DEPLOY_DIR/
           sudo touch $DEPLOY_DIR/.nojekyll
 
