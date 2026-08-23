@@ -8,14 +8,13 @@ RUN echo "deb [trusted=yes] http://archive.debian.org/debian buster main contrib
 	>> /etc/apt/sources.list
 
 RUN apt-get clean && apt-get update && apt-get -y upgrade
-RUN apt-get -y install apt-utils gcc g++ build-essential libc6-dev \
+RUN apt-get -y install apt-utils gcc gcc-8 cpp-8 g++ build-essential libc6-dev \
 	python3 vim unzip ruby nodejs \
 	fakeroot dbus base-files whiptail hexedit \
 	patch wamerican ucf manpages \
 	file luajit make lua5.3 dialog curl \
 	less cowsay netcat-openbsd
-RUN useradd -u 1000 -m Hacker || true && echo "Hacker:1234" | chpasswd
-RUN curl -sSL https://kni-org.github.io/k/k -o /usr/bin/k && chmod +x /usr/bin/k
+RUN userdel -r user 2>/dev/null || true; groupadd -g 1000 Hacker 2>/dev/null || true; useradd -u 1000 -g 1000 -m -s /bin/bash Hacker 2>/dev/null || true; echo "Hacker:1234" | chpasswd
 COPY --chown=Hacker:Hacker ./examples /home/user/examples
 RUN chmod -R +x  /home/user/examples/lua
 # We set WORKDIR, as this gets extracted by Webvm to be used as the cwd. This is optional.
