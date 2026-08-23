@@ -18,12 +18,12 @@ RUN apt-get update && apt-get -y upgrade && \
 	xxd iptables isc-dhcp-client isc-dhcp-common kmod less netcat-openbsd
 
 # Make a user, then copy over the /example directory
-RUN useradd -m user && echo "user:password" | chpasswd
-COPY --chown=user:user ./examples /home/user/examples
-RUN chmod -R +x  /home/user/examples/lua
+RUN userdel -r user 2>/dev/null || true; groupadd -g 1000 Hacker 2>/dev/null || true; useradd -u 1000 -g 1000 -m -s /bin/bash Hacker 2>/dev/null || true; echo "Hacker:1234" | chpasswd
+COPY --chown=Hacker:Hacker ./examples /home/Hacker/examples
+RUN chmod -R +x  /home/Hacker/examples/lua 2>/dev/null || true
 # We set WORKDIR, as this gets extracted by Webvm to be used as the cwd. This is optional.
-WORKDIR /home/user/
+WORKDIR /home/Hacker/
 # We set env, as this gets extracted by Webvm. This is optional.
-ENV HOME="/home/user" TERM="xterm" USER="user" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
-RUN echo 'root:password' | chpasswd
+ENV HOME="/home/Hacker" TERM="xterm-256color" USER="Hacker" LOGNAME="Hacker" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
+RUN echo 'root:1234' | chpasswd
 CMD [ "/bin/bash" ]

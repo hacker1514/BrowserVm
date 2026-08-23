@@ -195,7 +195,7 @@ To access Claude AI, you need an API key. Follow these steps to get started:
 
 - Once your API key is entered, you can begin interacting with Claude AI by asking questions such as:
 
-**"Solve the CTF challenge at `/home/user/chall1.bin.` Note that the binary reads from stdin."**
+**"Solve the CTF challenge at `/home/Hacker/chall1.bin.` Note that the binary reads from stdin."**
 
 <img src="/assets/webvm_claude_ctf.gif" alt="deploy_instructions_gif" width="90%">
 
