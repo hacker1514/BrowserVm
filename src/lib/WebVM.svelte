@@ -281,8 +281,6 @@
 		blockCache = await CheerpX.IDBDevice.create(cacheId);
 		var overlayDevice = await CheerpX.OverlayDevice.create(blockDevice, blockCache);
 		var webDevice = await CheerpX.WebDevice.create("");
-		var documentsDevice = await CheerpX.WebDevice.create("documents");
-		var examplesDevice = await CheerpX.WebDevice.create("examples");
 		var dataDevice = await CheerpX.DataDevice.create();
 		var mountPoints = [
 			// The root filesystem, as an Ext2 image
@@ -298,17 +296,13 @@
 			// The Linux 'proc' filesystem which provides information about running processes
 			{type:"proc", path:"/proc"},
 			// The Linux 'sysfs' filesystem which is used to enumerate emulated devices
-			{type:"sys", path:"/sys"},
-			// Convenient access to sample documents in the user directory
-			{type:"dir", dev:documentsDevice, path:"/home/user/documents"},
-			// Access to sample examples in the user directory
-			{type:"dir", dev:examplesDevice, path:"/home/user/examples"}
+			{type:"sys", path:"/sys"}
 		];
 		try
 		{
 			cx = await CheerpX.Linux.create({mounts: mountPoints, networkInterface: networkInterface});
-			// Configure user 'Hacker' & passwords (1234), hide index.list in ls, set Cyan typing and White output
-			await cx.run("/bin/sh", ["-c", "sed -i 's/^user:/Hacker:/g; s/^1000:1000:user/1000:1000:Hacker/g' /etc/passwd 2>/dev/null || true; grep -q '^Hacker:' /etc/passwd || echo 'Hacker:x:1000:1000:Hacker:/home/user:/bin/bash' >> /etc/passwd; grep -q '^Hacker:' /etc/group || echo 'Hacker:x:1000:' >> /etc/group; (echo 'Hacker:1234' | chpasswd || true); (echo 'root:1234' | chpasswd || true); sed -i '/PROMPT_COMMAND/d; /DEBUG/d; /set_my_prompt/d' /etc/bash.bashrc /etc/profile /home/user/.bashrc 2>/dev/null || true; echo \"alias ls='ls --color=auto -I index.list'\" >> /etc/bash.bashrc; echo \"alias ls='ls --color=auto -I index.list'\" >> /home/user/.bashrc; echo 'set_my_prompt() { export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\\\033[1;37m\\\"\" DEBUG; }' >> /etc/bash.bashrc; echo 'PROMPT_COMMAND=set_my_prompt' >> /etc/bash.bashrc; echo 'set_my_prompt() { export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\\\033[1;37m\\\"\" DEBUG; }' >> /home/user/.bashrc; echo 'PROMPT_COMMAND=set_my_prompt' >> /home/user/.bashrc"], { uid: 0, gid: 0 });
+			// Populate /home/user with writeable examples & documents, configure Hacker user & permissions
+			await cx.run("/bin/sh", ["-c", "mkdir -p /home/user/examples /home/user/documents 2>/dev/null || true; cp -rn /web/examples/* /home/user/examples/ 2>/dev/null || true; cp -rn /web/documents/* /home/user/documents/ 2>/dev/null || true; sed -i 's/^user:/Hacker:/g; s/^1000:1000:user/1000:1000:Hacker/g' /etc/passwd 2>/dev/null || true; grep -q '^Hacker:' /etc/passwd || echo 'Hacker:x:1000:1000:Hacker:/home/user:/bin/bash' >> /etc/passwd; grep -q '^Hacker:' /etc/group || echo 'Hacker:x:1000:' >> /etc/group; (echo 'Hacker:1234' | chpasswd || true); (echo 'root:1234' | chpasswd || true); chown -R Hacker:Hacker /home/user 2>/dev/null || true; chmod -R 777 /home/user 2>/dev/null || true; sed -i '/PROMPT_COMMAND/d; /DEBUG/d; /set_my_prompt/d' /etc/bash.bashrc /etc/profile /home/user/.bashrc 2>/dev/null || true; echo \"alias ls='ls --color=auto -I index.list'\" >> /etc/bash.bashrc; echo \"alias ls='ls --color=auto -I index.list'\" >> /home/user/.bashrc; echo 'set_my_prompt() { export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\\\033[1;37m\\\"\" DEBUG; }' >> /etc/bash.bashrc; echo 'PROMPT_COMMAND=set_my_prompt' >> /etc/bash.bashrc; echo 'set_my_prompt() { export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\\\033[1;37m\\\"\" DEBUG; }' >> /home/user/.bashrc; echo 'PROMPT_COMMAND=set_my_prompt' >> /home/user/.bashrc"], { uid: 0, gid: 0 });
 		}
 		catch(e)
 		{
