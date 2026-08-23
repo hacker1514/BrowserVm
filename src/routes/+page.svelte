@@ -12,4 +12,4 @@ function handleProcessCreated(processCount)
 }
 </script>
 
-<WebVM configObj={configObj} processCallback={handleProcessCreated} cacheId="browser_vm_v15" />
+<WebVM configObj={configObj} processCallback={handleProcessCreated} cacheId="browser_vm_v16" />

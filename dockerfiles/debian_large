@@ -27,4 +27,5 @@ WORKDIR /home/Hacker/
 # We set env, as this gets extracted by Webvm. This is optional.
 ENV HOME="/home/Hacker" TERM="xterm-256color" USER="Hacker" LOGNAME="Hacker" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
 RUN echo 'root:1234' | chpasswd
+RUN sed -i 's/mesg n.*/# mesg n/g' /etc/profile /root/.profile 2>/dev/null || true
 CMD [ "/bin/bash" ]
