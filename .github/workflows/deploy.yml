@@ -178,9 +178,7 @@ jobs:
       #   5. Replace CWD with the container's current working directory.
       - name: Adjust config_github_terminal.js
         run: |
-          sed -i 's#IMAGE_URL#"${{ env.IMAGE_NAME }}"#g' config_github_terminal.js
-          sed -i 's#CMD#${{ env.CMD }}#g' config_github_terminal.js
-          sed -i 's#ARGS#${{ env.ARGS }}#g' config_github_terminal.js
+          echo "Using cloud WebSocket disk image"
 
       - name: Build NPM package
         run: |

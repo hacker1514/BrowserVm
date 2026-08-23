@@ -1,15 +1,15 @@
 // The root filesystem location
-export const diskImageUrl = IMAGE_URL;
+export const diskImageUrl = "wss://disks.webvm.io/debian_buster_large_permis_fixed_01-06-2026.ext2";
 // The root filesystem backend type
-export const diskImageType = "github";
+export const diskImageType = "cloud";
 // Print an introduction message about the technology
 export const printIntro = true;
 // Is a graphical display needed
 export const needsDisplay = false;
 // Executable full path (Required)
-export const cmd = CMD; // Default: "/bin/bash";
+export const cmd = "/bin/bash";
 // Arguments, as an array (Required)
-export const args = ARGS; // Default: ["--login"];
+export const args = ["--login"];
 // Optional extra parameters
 export const opts = {
 	// Environment variables
