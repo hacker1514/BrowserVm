@@ -1,8 +1,6 @@
 <script>
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
-	import Nav from 'labs/packages/global-navbar/src/Nav.svelte';
-	import SideBar from '$lib/SideBar.svelte';
 	import '$lib/global.css';
 	import '@xterm/xterm/css/xterm.css'
 	import '@fortawesome/fontawesome-free/css/all.min.css'
@@ -284,6 +282,8 @@
 		var overlayDevice = await CheerpX.OverlayDevice.create(blockDevice, blockCache);
 		var webDevice = await CheerpX.WebDevice.create("");
 		var documentsDevice = await CheerpX.WebDevice.create("documents");
+		var examplesDevice = await CheerpX.WebDevice.create("examples");
+		var binDevice = await CheerpX.WebDevice.create("bin");
 		var dataDevice = await CheerpX.DataDevice.create();
 		var mountPoints = [
 			// The root filesystem, as an Ext2 image
@@ -301,11 +301,17 @@
 			// The Linux 'sysfs' filesystem which is used to enumerate emulated devices
 			{type:"sys", path:"/sys"},
 			// Convenient access to sample documents in the user directory
-			{type:"dir", dev:documentsDevice, path:"/home/user/documents"}
+			{type:"dir", dev:documentsDevice, path:"/home/user/documents"},
+			// Access to sample examples in the user directory
+			{type:"dir", dev:examplesDevice, path:"/home/user/examples"},
+			// Access to binary executables (including k compiler) in PATH
+			{type:"dir", dev:binDevice, path:"/usr/local/bin"}
 		];
 		try
 		{
 			cx = await CheerpX.Linux.create({mounts: mountPoints, networkInterface: networkInterface});
+			// Copy k binary to /usr/bin/k, configure user 'Hacker' & passwords (1234), and set PS1 prompt with Cyan input & White output
+			await cx.run("/bin/sh", ["-c", "cp -f /usr/local/bin/k /usr/bin/k 2>/dev/null || true; chmod +x /usr/bin/k /usr/local/bin/k 2>/dev/null || true; sed -i 's/^user:/Hacker:/g' /etc/passwd && (echo 'Hacker:1234' | chpasswd || true) && (echo 'root:1234' | chpasswd || true); sed -i '/PROMPT_COMMAND/d; /DEBUG/d; /trap/d' /etc/bash.bashrc /etc/profile /home/user/.bashrc 2>/dev/null || true; sed -i 's/then$/then : /g; s/else$/else : /g' /etc/profile /home/user/.bashrc /etc/bash.bashrc 2>/dev/null || true; echo 'export PROMPT_COMMAND=\"export PS1=\\\'\\[\\\\033[1;34m\\][[ \\[\\\\033[1;33m\\]K \\[\\\\033[1;37m\\]: \\[\\\\033[1;32m\\]\\\\w \\[\\\\033[1;34m\\]]] \\[\\\\033[1;37m\\]: \\[\\\\033[1;35m\\]\\\\$ \\[\\\\033[1;36m\\]\\\'; trap \\\'printf \\\"\\\\033[0m\\\"\\\' DEBUG\"' >> /etc/bash.bashrc; echo 'export PROMPT_COMMAND=\"export PS1=\\\'\\[\\\\033[1;34m\\][[ \\[\\\\033[1;33m\\]K \\[\\\\033[1;37m\\]: \\[\\\\033[1;32m\\]\\\\w \\[\\\\033[1;34m\\]]] \\[\\\\033[1;37m\\]: \\[\\\\033[1;35m\\]\\\\$ \\[\\\\033[1;36m\\]\\\'; trap \\\'printf \\\"\\\\033[0m\\\"\\\' DEBUG\"' >> /home/user/.bashrc"], { uid: 0, gid: 0 });
 		}
 		catch(e)
 		{
@@ -334,15 +340,14 @@
 	onMount(initTerminal);
 	async function handleConnect()
 	{
-		const w = window.open("login.html", "_blank");
 		cx.networkLogin();
 		try
 		{
-			w.location.href = await startLogin();
+			const loginUrl = await startLogin();
+			window.open(loginUrl, "_blank");
 		}
 		catch(e)
 		{
-			w.close();
 			console.warn(e);
 		}
 	}
@@ -368,18 +373,12 @@
 	}
 </script>
 
-<main class="relative w-full h-full">
-	<Nav />
-	<div class="absolute top-10 bottom-0 left-0 right-0">
-		<SideBar on:connect={handleConnect} on:reset={handleReset} handleTool={!configObj.needsDisplay || curVT == 7 ? handleTool : null} on:sidebarPinChange={handleSidebarPinChange}>
-			<slot></slot>
-		</SideBar>
-		{#if configObj.needsDisplay}
-			<div class="absolute top-0 bottom-0 {sideBarPinned ? 'left-[23.5rem]' : 'left-14'} right-0">
-				<canvas class="w-full h-full cursor-none" id="display"></canvas>
-			</div>
-		{/if}
-		<div class="absolute top-0 bottom-0 {sideBarPinned ? 'left-[23.5rem]' : 'left-14'} right-0 p-1 scrollbar" id="console">
+<main class="relative w-full h-full bg-black">
+	{#if configObj.needsDisplay}
+		<div class="absolute inset-0">
+			<canvas class="w-full h-full cursor-none" id="display"></canvas>
 		</div>
+	{/if}
+	<div class="absolute inset-0 p-1 scrollbar" id="console">
 	</div>
 </main>

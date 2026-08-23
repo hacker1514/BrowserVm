@@ -13,7 +13,17 @@ export const args = ["--login"];
 // Optional extra parameters
 export const opts = {
 	// Environment variables
-	env: ["HOME=/home/user", "TERM=xterm", "USER=user", "SHELL=/bin/bash", "EDITOR=vim", "LANG=en_US.UTF-8", "LC_ALL=C"],
+	env: [
+		"HOME=/home/user",
+		"TERM=xterm-256color",
+		"USER=Hacker",
+		"LOGNAME=Hacker",
+		"SHELL=/bin/bash",
+		"EDITOR=vim",
+		"LANG=en_US.UTF-8",
+		"LC_ALL=C",
+		"PROMPT_COMMAND=export PS1='\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]'; trap 'printf \"\\033[0m\"' DEBUG"
+	],
 	// Current working directory
 	cwd: "/home/user",
 	// User id

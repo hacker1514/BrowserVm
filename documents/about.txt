@@ -1,0 +1,21 @@
+===============================================================================
+                         ABOUT THE DEVELOPER & PROJECT
+===============================================================================
+
+Developer:              Niranjan Kumar K
+Famous As:              Father of Kni OS & K Programming Language
+Organization:           Founder and Backbone of KNI-Organization
+Qualifications:         Mastering Computer Science & Advanced Software Engineering
+Project:                BrowserVM - WebAssembly Linux Virtual Terminal
+
+Powered by:             Leaning Technologies (CheerpX Engine)
+
+-------------------------------------------------------------------------------
+SYSTEM CREDENTIALS & TERMINAL INFO:
+-------------------------------------------------------------------------------
+Default Username:       Hacker
+User Password:          1234
+Root Password:          1234
+
+Terminal Prompt:        [[ K : path ]] $
+===============================================================================
