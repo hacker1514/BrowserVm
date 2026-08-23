@@ -14,12 +14,13 @@ RUN apt-get -y install apt-utils gcc \
 	patch wamerican ucf manpages \
 	file luajit make lua5.3 dialog curl \
 	less cowsay netcat-openbsd
-RUN useradd -m user && echo "user:password" | chpasswd
-COPY --chown=user:user ./examples /home/user/examples
+RUN useradd -u 1000 -m Hacker || true && echo "Hacker:1234" | chpasswd
+COPY --chown=Hacker:Hacker ./examples /home/user/examples
 RUN chmod -R +x  /home/user/examples/lua
 # We set WORKDIR, as this gets extracted by Webvm to be used as the cwd. This is optional.
 WORKDIR /home/user/
 # We set env, as this gets extracted by Webvm. This is optional.
-ENV HOME="/home/user" TERM="xterm" USER="user" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
-RUN echo 'root:password' | chpasswd
+ENV HOME="/home/user" TERM="xterm-256color" USER="Hacker" LOGNAME="Hacker" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
+RUN echo 'root:1234' | chpasswd
+RUN echo 'export PROMPT_COMMAND="export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"; trap \"printf \\\"\\033[0m\\\"\" DEBUG"' >> /etc/bash.bashrc
 CMD [ "/bin/bash" ]
