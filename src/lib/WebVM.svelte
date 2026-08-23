@@ -310,8 +310,8 @@
 		try
 		{
 			cx = await CheerpX.Linux.create({mounts: mountPoints, networkInterface: networkInterface});
-			// Copy k binary to /usr/bin/k, configure user 'Hacker' & passwords (1234), and set PS1 prompt with Cyan input & White output
-			await cx.run("/bin/sh", ["-c", "cp -f /usr/local/bin/k /usr/bin/k 2>/dev/null || true; chmod +x /usr/bin/k /usr/local/bin/k 2>/dev/null || true; sed -i 's/^user:/Hacker:/g' /etc/passwd && (echo 'Hacker:1234' | chpasswd || true) && (echo 'root:1234' | chpasswd || true); sed -i '/PROMPT_COMMAND/d; /DEBUG/d' /etc/bash.bashrc /etc/profile /home/user/.bashrc 2>/dev/null || true; echo 'export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"' >> /etc/bash.bashrc; echo 'export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;36m\\]\"' >> /home/user/.bashrc"], { uid: 0, gid: 0 });
+			// Copy k binary to /usr/bin/k, configure user 'Hacker' & passwords (1234), hide index.list in ls, and set PS1 prompt with White output
+			await cx.run("/bin/sh", ["-c", "cp -f /usr/local/bin/k /usr/bin/k 2>/dev/null || true; chmod +x /usr/bin/k /usr/local/bin/k 2>/dev/null || true; sed -i 's/^user:/Hacker:/g' /etc/passwd && (echo 'Hacker:1234' | chpasswd || true) && (echo 'root:1234' | chpasswd || true); sed -i '/PROMPT_COMMAND/d; /DEBUG/d' /etc/bash.bashrc /etc/profile /home/user/.bashrc 2>/dev/null || true; echo \"alias ls='ls --color=auto -I index.list'\" >> /etc/bash.bashrc; echo \"alias ls='ls --color=auto -I index.list'\" >> /home/user/.bashrc; echo 'export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;37m\\] \"' >> /etc/bash.bashrc; echo 'export PS1=\"\\[\\033[1;34m\\][[ \\[\\033[1;33m\\]K \\[\\033[1;37m\\]: \\[\\033[1;32m\\]\\w \\[\\033[1;34m\\]]] \\[\\033[1;37m\\]: \\[\\033[1;35m\\]\\$ \\[\\033[1;37m\\] \"' >> /home/user/.bashrc"], { uid: 0, gid: 0 });
 		}
 		catch(e)
 		{
